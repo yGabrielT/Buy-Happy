@@ -2,6 +2,20 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/D:/Faculdade%20Coisas/BuyHappy/BuyHappy/web/index.html</file>
+            <file>file:/D:/Faculdade%20Coisas/BuyHappy/BuyHappy/web/script2.js</file>
+            <file>file:/D:/Faculdade%20Coisas/BuyHappy/BuyHappy/src/java/Modelo/DAOProduto.java</file>
+            <file>file:/D:/Faculdade%20Coisas/BuyHappy/BuyHappy/src/java/Controle/ControleProduto.java</file>
+            <file>file:/D:/Faculdade%20Coisas/BuyHappy/BuyHappy/web/menu.jsp</file>
+            <file>file:/D:/Faculdade%20Coisas/BuyHappy/BuyHappy/src/java/Controle/ControleUsuario.java</file>
+            <file>file:/D:/Faculdade%20Coisas/BuyHappy/BuyHappy/src/java/Modelo/DAOUsuario.java</file>
+            <file>file:/D:/Faculdade%20Coisas/BuyHappy/BuyHappy/src/java/Controle/ValidarUsuario.java</file>
+            <file>file:/D:/Faculdade%20Coisas/BuyHappy/BuyHappy/web/login.css</file>
+            <file>file:/D:/Faculdade%20Coisas/BuyHappy/BuyHappy/web/cadastro.html</file>
+            <file>file:/D:/Faculdade%20Coisas/BuyHappy/BuyHappy/web/cadastro.css</file>
+            <file>file:/D:/Faculdade%20Coisas/BuyHappy/BuyHappy/web/style.css</file>
+            <file>file:/D:/Faculdade%20Coisas/BuyHappy/BuyHappy/web/mensagens.jsp</file>
+        </group>
     </open-files>
 </project-private>

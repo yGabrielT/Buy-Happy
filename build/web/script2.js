@@ -45,7 +45,6 @@ function getRandomComments(min = 1, max = 3) {
   const shuffled = [...commentPool].sort(() => 0.5 - Math.random());
   return shuffled.slice(0, count);
 }
-
 const products = [
   {
     id: 1,
