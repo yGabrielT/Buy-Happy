@@ -4,6 +4,7 @@
  */
 package Controle;
 
+import Modelo.DAOProduto;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -11,6 +12,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.sql.SQLException;
 
 /**
  *
@@ -30,19 +32,21 @@ public class ControleProduto extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ControleProduto</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ControleProduto at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json;charset=UTF-8");
+        String mensagem;
+        String[] produtos;
+        PrintWriter out = response.getWriter();
+        DAOProduto dao = new DAOProduto();
+        try {
+            produtos = dao.buscarProdutos();
+            out.print(produtos[0]);
+        } catch (SQLException | ClassNotFoundException ex) {
+            mensagem = ("Entre em contato com o suporte e informe o erro: " + ex.getMessage());
+            request.setAttribute("mensagem", mensagem);
+            request.getRequestDispatcher("mensagens.jsp").forward(request, response);
         }
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

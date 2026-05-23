@@ -1,3 +1,37 @@
+let products = [];
+async function selecionarProdutos() {
+
+    try {
+
+        const resposta = await fetch("ControleProduto");
+        
+        console.log(resposta);
+
+        const products1 = await resposta.json();
+        return products1;
+        
+
+    } catch (erro) {
+
+        console.log("Erro:", erro);
+
+    }
+
+}
+async function iniciar() {
+
+    products = await selecionarProdutos();
+
+    console.log(products);
+
+    carregarProdutos();
+
+}
+
+iniciar();
+
+
+
 const commentPool = [
   "Produto excelente, superou minhas expectativas!",
   "Muito bom, recomendo a todos!",
@@ -45,7 +79,7 @@ function getRandomComments(min = 1, max = 3) {
   const shuffled = [...commentPool].sort(() => 0.5 - Math.random());
   return shuffled.slice(0, count);
 }
-const products = [
+const products1 = [
   {
     id: 1,
     nome: "Fone de Ouvido Bluetooth",
@@ -648,6 +682,8 @@ const products = [
   }
 ];
 
+console.log(products);
+
 function formatCurrency(value) {
   return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
@@ -719,7 +755,6 @@ function carregarProdutos(categoria = "all") {
     .forEach(p => container.innerHTML += gerarCard(p));
 }
 
-carregarProdutos();
 
 const filterButtons = document.querySelectorAll('.filter-btn');
 
