@@ -46,7 +46,7 @@ public class DAOUsuario {
         ResultSet dadosUsuario = st.executeQuery();
         if (dadosUsuario.next()){
             
-            dados[0] = dadosUsuario.getString("email");
+            dados[0] = dadosUsuario.getString("id_usuario");
             dados[1] = dadosUsuario.getString("senha");
             dados[2] = dadosUsuario.getString("nome");
             return dados;

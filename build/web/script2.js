@@ -23,6 +23,10 @@ async function iniciar() {
     products = await selecionarProdutos();
 
     console.log(products);
+    
+    products.forEach(p => {
+        if (p.stock === undefined) p.stock = getRandomStock();
+      });
 
     carregarProdutos();
 
@@ -30,657 +34,90 @@ async function iniciar() {
 
 iniciar();
 
+const form = document.querySelector(".review-create");
 
+form.addEventListener("submit", async function(e) {
 
-const commentPool = [
-  "Produto excelente, superou minhas expectativas!",
-  "Muito bom, recomendo a todos!",
-  "Chegou rápido e em perfeito estado. Adorei!",
-  "Qualidade impecável, vale cada centavo.",
-  "Funciona perfeitamente, estou muito satisfeito.",
-  "Um dos melhores que já comprei, ótimo custo-benefício.",
-  "Design bonito e funcional. Perfeito para o dia a dia.",
-  "Fácil de usar e configurar. Recomendo!",
-  "Exatamente como na descrição, sem surpresas.",
-  "Ótimo para presentear, quem recebeu amou!",
-  "Entrega super rápida e produto de alta qualidade.",
-  "Amei! Era exatamente o que eu procurava.",
-  "Surpreendente! Não esperava tanta qualidade por esse preço.",
-  "Indispensável para quem busca praticidade.",
-  "Muito resistente e durável, estou impressionado.",
-  "Melhor compra do ano, sem dúvidas!",
-  "Atendimento ao cliente excelente e produto idem.",
-  "Simplesmente perfeito, sem nenhum defeito.",
-  "Recompraria mil vezes! Muito feliz com a aquisição.",
-  "A cor é linda e o material de ótima qualidade.",
-  "Compacto e eficiente, ideal para viagens.",
-  "Fiquei impressionado com a durabilidade.",
-  "Excelente para o trabalho e lazer.",
-  "Superou todas as minhas expectativas de desempenho.",
-  "Uma compra que realmente valeu a pena!",
-  "Perfeito para quem busca algo prático e moderno.",
-  "Adorei a facilidade de uso, muito intuitivo.",
-  "Leve e fácil de transportar, muito conveniente.",
-  "Funcionalidade ótima, atende a todas as necessidades.",
-  "Preço justo pela qualidade oferecida.",
-  "Estou muito feliz com a minha aquisição!",
-  "Produto de alta performance, recomendo!",
-  "Apresentação do produto impecável.",
-  "Ótima experiência de compra.",
-  "Chegou antes do prazo, excelente!",
-  "Material de primeira linha, muito satisfeito.",
-  "Fácil de integrar com outros dispositivos.",
-  "Um item essencial para o dia a dia.",
-  "Superou minhas expectativas em todos os aspectos."
-];
+    e.preventDefault();
 
-function getRandomComments(min = 1, max = 3) {
-  const count = Math.floor(Math.random() * (max - min + 1)) + min;
-  const shuffled = [...commentPool].sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, count);
-}
-const products1 = [
-  {
-    id: 1,
-    nome: "Fone de Ouvido Bluetooth",
-    categoria: "eletronicos",
-    preco: 129.90,
-    avaliacao: 4.5,
-    totalAvaliacoes: 128,
-    descricao: "Qualidade de som com graves reforçados e bateria de longa duração.",
-    imagens: [
-      "https://http2.mlstatic.com/D_NQ_NP_630478-MLU75210746968_032024-O.webp",
-      "https://http2.mlstatic.com/D_NQ_NP_903650-MLU75210746966_032024-O.webp",
-      "https://http2.mlstatic.com/D_NQ_NP_823094-MLU75210746967_032024-O.webp"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 2,
-    nome: "Mochila Antifurto",
-    categoria: "acessorios",
-    preco: 89.90,
-    avaliacao: 4.8,
-    totalAvaliacoes: 89,
-    descricao: "Design moderno com zíper oculto e porta USB.",
-    imagens: [
-      "https://http2.mlstatic.com/D_NQ_NP_835618-MLU76709611585_052024-O.webp",
-      "https://http2.mlstatic.com/D_NQ_NP_856652-MLU76709611586_052024-O.webp",
-      "https://http2.mlstatic.com/D_NQ_NP_935088-MLU76709611588_052024-O.webp"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 3,
-    nome: "Garrafa Térmica 500ml",
-    categoria: "acessorios",
-    preco: 49.90,
-    avaliacao: 4.4,
-    totalAvaliacoes: 64,
-    descricao: "Mantém sua bebida quente ou fria por até 12 horas.",
-    imagens: [
-      "https://http2.mlstatic.com/D_NQ_NP_788733-MLU75090081780_032024-O.webp",
-      "https://http2.mlstatic.com/D_NQ_NP_837670-MLU75090081781_032024-O.webp",
-      "https://http2.mlstatic.com/D_NQ_NP_817881-MLU75090081782_032024-O.webp"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 4,
-    nome: "Smartwatch Esportivo",
-    categoria: "eletronicos",
-    preco: 199.90,
-    avaliacao: 4.9,
-    totalAvaliacoes: 215,
-    descricao: "GPS integrado, monitor cardíaco e diversos modos esportivos.",
-    imagens: [
-      "https://http2.mlstatic.com/D_NQ_NP_680913-MLA83069809714_032025-O.webp",
-      "https://http2.mlstatic.com/D_NQ_NP_939955-MLA83069809715_032025-O.webp",
-      "https://http2.mlstatic.com/D_NQ_NP_707872-MLA83069809716_032025-O.webp"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 5,
-    nome: "Power Bank 10000mAh",
-    categoria: "eletronicos",
-    preco: 79.90,
-    avaliacao: 4.3,
-    totalAvaliacoes: 178,
-    descricao: "Carregamento rápido e entrada USB-C.",
-    imagens: [
-      "https://http2.mlstatic.com/D_NQ_NP_631928-MLB80495757708_112024-O.webp",
-      "https://http2.mlstatic.com/D_NQ_N_NP_631928-MLB80495757708_112024-O.webp",
-      "https://http2.mlstatic.com/D_NQ_NP_631928-MLB80495757708_112024-O.webp"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 6,
-    nome: "Caixa de Som Bluetooth 20W",
-    categoria: "eletronicos",
-    preco: 149.99,
-    avaliacao: 4.4,
-    totalAvaliacoes: 92,
-    descricao: "Som potente com 20W RMS e bateria de 12 horas.",
-    imagens: [
-      "https://m.media-amazon.com/images/I/51FM1oa9nDL._AC_SX679_.jpg",
-      "https://m.media-amazon.com/images/I/51ceBYH8tML._AC_SX679_.jpg",
-      "https://m.media-amazon.com/images/I/61+E3v14jGL._AC_SX679_.jpg"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 7,
-    nome: "Teclado Sem Fio",
-    categoria: "informatica",
-    preco: 119.90,
-    avaliacao: 4.2,
-    totalAvaliacoes: 47,
-    descricao: "Teclado ergonômico Bluetooth com baixa latência.",
-    imagens: [
-      "https://m.media-amazon.com/images/I/615TeBDThEL._AC_SX679_.jpg",
-      "https://m.media-amazon.com/images/I/61VnMOyQyOL._AC_SX679_.jpg",
-      "https://m.media-amazon.com/images/I/61KhbT5w7UL._AC_SX679_.jpg"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 8,
-    nome: "Mouse Gamer RGB",
-    categoria: "informatica",
-    preco: 69.90,
-    avaliacao: 4.7,
-    totalAvaliacoes: 156,
-    descricao: "DPI ajustável até 6400 e iluminação RGB.",
-    imagens: [
-      "https://m.media-amazon.com/images/I/61saZHQI52L.__AC_SX300_SY300_QL70_ML2_.jpg",
-      "https://m.media-amazon.com/images/I/61M0NDzz8rL.__AC_SX300_SY300_QL70_ML2_.jpg",
-      "https://m.media-amazon.com/images/I/61RDGuY0eOL.__AC_SX300_SY300_QL70_ML2_.jpg"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 9,
-    nome: "Carregador Sem Fio 15W",
-    categoria: "eletronicos",
-    preco: 59.90,
-    avaliacao: 4.1,
-    totalAvaliacoes: 83,
-    descricao: "Carregamento rápido compatível com Qi.",
-    imagens: [
-      "https://m.media-amazon.com/images/I/51FM1oa9nDL._AC_SX679_.jpg",
-      "https://m.media-amazon.com/images/I/61JH1D+8t2L._AC_SX679_.jpg",
-      "https://m.media-amazon.com/images/I/51ZNsXTc3TL._AC_SX679_.jpg"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 10,
-    nome: "Suporte para Notebook",
-    categoria: "informatica",
-    preco: 89.90,
-    avaliacao: 4.3,
-    totalAvaliacoes: 41,
-    descricao: "Ergonômico e ajustável para notebooks até 17 polegadas.",
-    imagens: [
-      "https://m.media-amazon.com/images/I/61ZqTo-kwpL.__AC_SY300_SX300_QL70_ML2_.jpg",
-      "https://m.media-amazon.com/images/I/61Uz7RVYkQL.__AC_SY300_SX300_QL70_ML2_.jpg",
-      "https://m.media-amazon.com/images/I/618KYJlc3UL.__AC_SY300_SX300_QL70_ML2_.jpg"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 11,
-    nome: "HD Externo 1TB",
-    categoria: "informatica",
-    preco: 249.99,
-    avaliacao: 4.9,
-    totalAvaliacoes: 132,
-    descricao: "Armazenamento portátil com USB 3.0.",
-    imagens: [
-      "https://m.media-amazon.com/images/I/81o5zJ+FcPL._AC_SY300_SX300_.jpg",
-      "https://m.media-amazon.com/images/I/71hO6exdF3L._AC_SY300_SX300_.jpg",
-      "https://m.media-amazon.com/images/I/81vCn5R9y4L._AC_SY300_SX300_.jpg"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 12,
-    nome: "Webcam Full HD 1080p",
-    categoria: "informatica",
-    preco: 139.90,
-    avaliacao: 4.2,
-    totalAvaliacoes: 76,
-    descricao: "Resolução 1080p e microfone integrado.",
-    imagens: [
-      "https://m.media-amazon.com/images/I/41veQg4xGrL._AC_SX679_.jpg",
-      "https://m.media-amazon.com/images/I/51Jhbm6pYgL._AC_SX679_.jpg",
-      "https://m.media-amazon.com/images/I/71vn6M16rHL._AC_SX679_.jpg"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 13,
-    nome: "Pulseira Esportiva Smartwatch",
-    categoria: "acessorios",
-    preco: 29.90,
-    avaliacao: 4.4,
-    totalAvaliacoes: 54,
-    descricao: "Pulseira ajustável compatível com diversos relógios.",
-    imagens: [
-      "https://m.media-amazon.com/images/I/61co4OFuDIL._AC_SX679_.jpg",
-      "https://m.media-amazon.com/images/I/71M2HfVkoWL._AC_SX679_.jpg",
-      "https://m.media-amazon.com/images/I/71oB9S2U2EL._AC_SX679_.jpg"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 14,
-    nome: "Capa Protetora para Smartphone",
-    categoria: "acessorios",
-    preco: 39.90,
-    avaliacao: 4.0,
-    totalAvaliacoes: 58,
-    descricao: "Proteção contra impactos, material resistente e toque emborrachado.",
-    imagens: [
-      "https://via.placeholder.com/600x400?text=Capa+Smartphone+1",
-      "https://via.placeholder.com/160x120?text=Capa+Mini+1",
-      "https://via.placeholder.com/160x120?text=Capa+Mini+2"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 15,
-    nome: "Carregador USB-C 30W",
-    categoria: "eletronicos",
-    preco: 79.90,
-    avaliacao: 4.4,
-    totalAvaliacoes: 204,
-    descricao: "Carregamento rápido PD 30W para celulares e tablets.",
-    imagens: [
-      "https://via.placeholder.com/600x400?text=Carregador+30W+1",
-      "https://via.placeholder.com/160x120?text=Carregador+Mini+1",
-      "https://via.placeholder.com/160x120?text=Carregador+Mini+2"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 16,
-    nome: "Cabo Lightning MFi 1.5m",
-    categoria: "acessorios",
-    preco: 29.90,
-    avaliacao: 4.1,
-    totalAvaliacoes: 70,
-    descricao: "Cabo certificado MFi para iPhone, durável e rápido.",
-    imagens: [
-      "https://via.placeholder.com/600x400?text=Cabo+Lightning+1",
-      "https://via.placeholder.com/160x120?text=Cabo+Mini+1",
-      "https://via.placeholder.com/160x120?text=Cabo+Mini+2"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 17,
-    nome: "Monitor 24'' Full HD",
-    categoria: "informatica",
-    preco: 699.00,
-    avaliacao: 4.3,
-    totalAvaliacoes: 190,
-    descricao: "Monitor 24 polegadas, painel IPS e cores precisas.",
-    imagens: [
-      "https://via.placeholder.com/600x400?text=Monitor+24+1",
-      "https://via.placeholder.com/160x120?text=Monitor+Mini+1",
-      "https://via.placeholder.com/160x120?text=Monitor+Mini+2"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 18,
-    nome: "SSD NVMe 500GB",
-    categoria: "informatica",
-    preco: 349.90,
-    avaliacao: 4.7,
-    totalAvaliacoes: 412,
-    descricao: "SSD NVMe com altas taxas de leitura e gravação para sistema e jogos.",
-    imagens: [
-      "https://via.placeholder.com/600x400?text=SSD+NVMe+500GB+1",
-      "https://via.placeholder.com/160x120?text=SSD+Mini+1",
-      "https://via.placeholder.com/160x120?text=SSD+Mini+2"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 19,
-    nome: "Cadeira Gamer Ergonomica",
-    categoria: "informatica",
-    preco: 899.90,
-    avaliacao: 4.2,
-    totalAvaliacoes: 88,
-    descricao: "Ergonomia, apoio de cabeça e ajuste de altura para longas sessões.",
-    imagens: [
-      "https://via.placeholder.com/600x400?text=Cadeira+Gamer+1",
-      "https://via.placeholder.com/160x120?text=Cadeira+Mini+1",
-      "https://via.placeholder.com/160x120?text=Cadeira+Mini+2"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 20,
-    nome: "Teclado Mecânico RGB",
-    categoria: "informatica",
-    preco: 249.90,
-    avaliacao: 4.6,
-    totalAvaliacoes: 321,
-    descricao: "Switches mecânicos, iluminação RGB e construção robusta.",
-    imagens: [
-      "https://via.placeholder.com/600x400?text=Teclado+Mecanico+1",
-      "https://via.placeholder.com/160x120?text=Teclado+Mini+1",
-      "https://via.placeholder.com/160x120?text=Teclado+Mini+2"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 21,
-    nome: "Câmera de Ação 4K",
-    categoria: "eletronicos",
-    preco: 399.90,
-    avaliacao: 4.0,
-    totalAvaliacoes: 150,
-    descricao: "Gravação em 4K, estabilização eletrônica e resistência à água.",
-    imagens: [
-      "https://via.placeholder.com/600x400?text=Camera+Action+4K+1",
-      "https://via.placeholder.com/160x120?text=Camera+Mini+1",
-      "https://via.placeholder.com/160x120?text=Camera+Mini+2"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 22,
-    nome: "Relógio Esportivo com GPS",
-    categoria: "eletronicos",
-    preco: 349.90,
-    avaliacao: 4.4,
-    totalAvaliacoes: 210,
-    descricao: "GPS integrado, monitor cardíaco e modos de treino.",
-    imagens: [
-      "https://via.placeholder.com/600x400?text=Relogio+GPS+1",
-      "https://via.placeholder.com/160x120?text=Relogio+Mini+1",
-      "https://via.placeholder.com/160x120?text=Relogio+Mini+2"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 23,
-    nome: "Fone Intra-auricular Esportivo",
-    categoria: "eletronicos",
-    preco: 79.90,
-    avaliacao: 3.9,
-    totalAvaliacoes: 44,
-    descricao: "Fone leve, resistente ao suor e com bom isolamento.",
-    imagens: [
-      "https://via.placeholder.com/600x400?text=Fone+Esportivo+1",
-      "https://via.placeholder.com/160x120?text=Fone+Mini+1",
-      "https://via.placeholder.com/160x120?text=Fone+Mini+2"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 24,
-    nome: "Bolsa Térmica para Lanche",
-    categoria: "acessorios",
-    preco: 49.90,
-    avaliacao: 4.0,
-    totalAvaliacoes: 30,
-    descricao: "Mantém a temperatura e é fácil de carregar.",
-    imagens: [
-      "https://via.placeholder.com/600x400?text=Bolsa+Termica+1",
-      "https://via.placeholder.com/160x120?text=Bolsa+Mini+1",
-      "https://via.placeholder.com/160x120?text=Bolsa+Mini+2"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 25,
-    nome: "Corda de Pular Profissional",
-    categoria: "esportes",
-    preco: 39.90,
-    avaliacao: 4.3,
-    totalAvaliacoes: 22,
-    descricao: "Corda com rolamento e cabo ajustável para treinos intensos.",
-    imagens: [
-      "https://via.placeholder.com/600x400?text=Corda+Pular+1",
-      "https://via.placeholder.com/160x120?text=Corda+Mini+1",
-      "https://via.placeholder.com/160x120?text=Corda+Mini+2"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 26,
-    nome: "Bola de Futebol Oficial",
-    categoria: "esportes",
-    preco: 129.90,
-    avaliacao: 4.5,
-    totalAvaliacoes: 76,
-    descricao: "Bola oficial costurada, boa resistência e ótima resposta ao chute.",
-    imagens: [
-      "https://via.placeholder.com/600x400?text=Bola+Futebol+1",
-      "https://via.placeholder.com/160x120?text=Bola+Mini+1",
-      "https://via.placeholder.com/160x120?text=Bola+Mini+2"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 27,
-    nome: "Kit Ferramentas 45 Peças",
-    categoria: "acessorios",
-    preco: 199.90,
-    avaliacao: 4.1,
-    totalAvaliacoes: 39,
-    descricao: "Conjunto completo para pequenos reparos domésticos.",
-    imagens: [
-      "https://via.placeholder.com/600x400?text=Kit+Ferramentas+1",
-      "https://via.placeholder.com/160x120?text=Kit+Mini+1",
-      "https://via.placeholder.com/160x120?text=Kit+Mini+2"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 28,
-    nome: "Microfone USB Condensador",
-    categoria: "informatica",
-    preco: 229.90,
-    avaliacao: 4.4,
-    totalAvaliacoes: 64,
-    descricao: "Microfone condensador USB para streaming e gravação.",
-    imagens: [
-      "https://via.placeholder.com/600x400?text=Microfone+USB+1",
-      "https://via.placeholder.com/160x120?text=Microfone+Mini+1",
-      "https://via.placeholder.com/160x120?text=Microfone+Mini+2"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 29,
-    nome: "Adaptador HDMI para USB-C",
-    categoria: "informatica",
-    preco: 59.90,
-    avaliacao: 4.0,
-    totalAvaliacoes: 18,
-    descricao: "Adaptador para ligar notebooks a monitores e TVs.",
-    imagens: [
-      "https://via.placeholder.com/600x400?text=Adaptador+HDMI+1",
-      "https://via.placeholder.com/160x120?text=Adaptador+Mini+1",
-      "https://via.placeholder.com/160x120?text=Adaptador+Mini+2"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 30,
-    nome: "Cabo HDMI 2.0 - 2m",
-    categoria: "informatica",
-    preco: 39.90,
-    avaliacao: 4.2,
-    totalAvaliacoes: 25,
-    descricao: "Cabo de alta velocidade para transmissão em 4K.",
-    imagens: [
-      "https://via.placeholder.com/600x400?text=Cabo+HDMI+1",
-      "https://via.placeholder.com/160x120?text=Cabo+Mini+1",
-      "https://via.placeholder.com/160x120?text=Cabo+Mini+2"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 31,
-    nome: "Squeeze Aço Inox 750ml",
-    categoria: "acessorios",
-    preco: 69.90,
-    avaliacao: 4.5,
-    totalAvaliacoes: 101,
-    descricao: "Squeeze de aço inox com isolamento térmico.",
-    imagens: [
-      "https://via.placeholder.com/600x400?text=Squeeze+Inox+1",
-      "https://via.placeholder.com/160x120?text=Squeeze+Mini+1",
-      "https://via.placeholder.com/160x120?text=Squeeze+Mini+2"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 32,
-    nome: "Câmera Web 2K para Home Office",
-    categoria: "informatica",
-    preco: 199.90,
-    avaliacao: 4.3,
-    totalAvaliacoes: 88,
-    descricao: "Resolução 2K, microfone duplo e correção automática de luz.",
-    imagens: [
-      "https://via.placeholder.com/600x400?text=Camera+2K+1",
-      "https://via.placeholder.com/160x120?text=Camera+Mini+1",
-      "https://via.placeholder.com/160x120?text=Camera+Mini+2"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 33,
-    nome: "Mochila para Notebook 15\"",
-    categoria: "acessorios",
-    preco: 179.90,
-    avaliacao: 4.2,
-    totalAvaliacoes: 55,
-    descricao: "Compartimento acolchoado para notebook e bolsos organizadores.",
-    imagens: [
-      "https://via.placeholder.com/600x400?text=Mochila+Notebook+1",
-      "https://via.placeholder.com/160x120?text=Mochila+Mini+1",
-      "https://via.placeholder.com/160x120?text=Mochila+Mini+2"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 34,
-    nome: "Suporte de Parede para TV 32-55\"",
-    categoria: "acessorios",
-    preco: 119.90,
-    avaliacao: 4.1,
-    totalAvaliacoes: 34,
-    descricao: "Suporte ajustável com parafusos de alta resistência.",
-    imagens: [
-      "https://via.placeholder.com/600x400?text=Suporte+TV+1",
-      "https://via.placeholder.com/160x120?text=Suporte+Mini+1",
-      "https://via.placeholder.com/160x120?text=Suporte+Mini+2"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 35,
-    nome: "Estabilizador de Energia 2000VA",
-    categoria: "eletronicos",
-    preco: 499.90,
-    avaliacao: 4.0,
-    totalAvaliacoes: 29,
-    descricao: "Protege equipamentos eletrônicos contra variações de tensão.",
-    imagens: [
-      "https://via.placeholder.com/600x400?text=Estabilizador+2000VA+1",
-      "https://via.placeholder.com/160x120?text=Estabilizador+Mini+1",
-      "https://via.placeholder.com/160x120?text=Estabilizador+Mini+2"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 36,
-    nome: "Kit de Limpeza para Eletrônicos",
-    categoria: "acessorios",
-    preco: 24.90,
-    avaliacao: 4.4,
-    totalAvaliacoes: 12,
-    descricao: "Fluído de limpeza, flanelas e pincéis para eletrônicos.",
-    imagens: [
-      "https://via.placeholder.com/600x400?text=Kit+Limpeza+1",
-      "https://via.placeholder.com/160x120?text=Kit+Mini+1",
-      "https://via.placeholder.com/160x120?text=Kit+Mini+2"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 37,
-    nome: "Cabo de Força 3m",
-    categoria: "acessorios",
-    preco: 19.90,
-    avaliacao: 3.9,
-    totalAvaliacoes: 6,
-    descricao: "Cabo de força para computadores e monitores.",
-    imagens: [
-      "https://via.placeholder.com/600x400?text=Cabo+Forca+1",
-      "https://via.placeholder.com/160x120?text=Cabo+Mini+1",
-      "https://via.placeholder.com/160x120?text=Cabo+Mini+2"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 38,
-    nome: "Headset Gamer com Microfone",
-    categoria: "eletronicos",
-    preco: 289.90,
-    avaliacao: 4.6,
-    totalAvaliacoes: 110,
-    descricao: "Headset com som surround 7.1, microfone retrátil e iluminação RGB.",
-    imagens: [
-      "https://via.placeholder.com/600x400?text=Headset+Gamer+1",
-      "https://via.placeholder.com/160x120?text=Headset+Mini+1",
-      "https://via.placeholder.com/160x120?text=Headset+Mini+2"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 39,
-    nome: "Roteador Wi-Fi Dual Band",
-    categoria: "informatica",
-    preco: 229.90,
-    avaliacao: 4.2,
-    totalAvaliacoes: 140,
-    descricao: "Roteador dual band com boa cobertura e portas Gigabit.",
-    imagens: [
-      "https://via.placeholder.com/600x400?text=Roteador+WiFi+1",
-      "https://via.placeholder.com/160x120?text=Roteador+Mini+1",
-      "https://via.placeholder.com/160x120?text=Roteador+Mini+2"
-    ],
-    comments: getRandomComments()
-  },
-  {
-    id: 40,
-    nome: "Suporte Ergonômico para Monitor",
-    categoria: "informatica",
-    preco: 159.90,
-    avaliacao: 4.1,
-    totalAvaliacoes: 28,
-    descricao: "Base ajustável para melhorar a postura e ergonomia.",
-    imagens: [
-      "https://via.placeholder.com/600x400?text=Suporte+Monitor+1",
-      "https://via.placeholder.com/160x120?text=Suporte+Mini+1",
-      "https://via.placeholder.com/160x120?text=Suporte+Mini+2"
-    ],
-    comments: getRandomComments()
-  }
-];
+    const dados = new URLSearchParams();
+    const idProduto = document.getElementById("idProduto").value;
+
+    dados.append("comentario",
+        document.getElementById("comentario").value
+    );
+
+    dados.append(
+        "nota",
+        document.querySelector('input[name="nota"]:checked').value
+    );
+
+    dados.append(
+        "idProduto",
+        document.getElementById("idProduto").value
+    );
+
+    dados.append(
+        "idUsuario",
+        document.getElementById("idUsuario").value
+    );
+
+    const resposta = await fetch("ControleReview", {
+        method: "POST",
+        headers: {
+            "Content-Type":
+            "application/x-www-form-urlencoded"
+        },
+        body: dados
+    });
+
+    // limpa textarea
+    document.getElementById("comentario").value = "";
+
+    // limpa estrelas
+    document.querySelectorAll('input[name="nota"]')
+        .forEach(radio => radio.checked = false);
+        
+    iniciar();
+
+});
+
+document.addEventListener("click", async function(e) {
+
+    if (e.target.classList.contains("vote-btn")) {
+
+        const reviewId = e.target.dataset.review;
+        const type = e.target.dataset.type;
+
+        const dados = new URLSearchParams();
+
+        dados.append("idReview", reviewId);
+        dados.append("tipo", type);
+
+        await fetch("ControleVotoReview", {
+            method: "POST",
+            headers: {
+                "Content-Type":
+                "application/x-www-form-urlencoded"
+            },
+            body: dados
+        });
+
+        const scoreElement =
+            e.target.parentElement.querySelector(".vote-score");
+
+        let scoreAtual = parseInt(scoreElement.textContent);
+
+        if (type === "up") {
+            scoreAtual++;
+        } else {
+            scoreAtual--;
+        }
+
+        scoreElement.textContent = scoreAtual;
+    }
+
+});
 
 console.log(products);
 
@@ -703,9 +140,7 @@ function getRandomStock(min = 1, max = 50) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-products.forEach(p => {
-  if (p.stock === undefined) p.stock = getRandomStock();
-});
+
 
 function shorten(text, max) {
   if (!text) return '';
@@ -828,19 +263,69 @@ function viewProduct(id) {
       });
     });
   }
+  const form = document.querySelector(".review-create");
+  const inputHidden = document.createElement("input");
+  inputHidden.id = "idProduto";
+  inputHidden.type = "hidden";
+  inputHidden.name = "idProduto";
+  inputHidden.value = id;
+  form.appendChild(inputHidden);
   const commentsList = document.getElementById("detail-product-comments");
   if (commentsList) {
     commentsList.innerHTML = "";
     if (produto.comments && produto.comments.length > 0) {
       produto.comments.forEach(comment => {
+
         const li = document.createElement("li");
-        li.textContent = comment;
-        li.style.marginBottom = "8px";
-        li.style.padding = "10px";
+
+        li.style.marginBottom = "12px";
+        li.style.padding = "15px";
         li.style.backgroundColor = "#f9f9f9";
-        li.style.borderRadius = "5px";
-        li.style.borderLeft = "3px solid #ff5722";
+        li.style.borderRadius = "8px";
+        li.style.borderLeft = "4px solid #ff5722";
+
+        li.innerHTML = `
+
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+
+                <strong style="font-size:16px;color:#333;">
+                    ${escapeHtml(comment.nome)}
+                </strong>
+
+                <span style="color:#ff9800;font-weight:bold;">
+                    ${"★".repeat(comment.estrelas)}
+                </span>
+
+            </div>
+
+            <div class="review-votes">
+
+                <button class="vote-btn upvote"
+                    data-review="${comment.id}"
+                    data-type="up">
+                    ▲
+                </button>
+
+                <span class="vote-score">
+                    ${comment.score}
+                </span>
+
+                <button class="vote-btn downvote"
+                    data-review="${comment.id}"
+                    data-type="down">
+                    ▼
+                </button>
+
+            </div>
+
+            <div style="color:#444;line-height:1.5;margin-top:10px;">
+                ${escapeHtml(comment.descricao)}
+            </div>
+
+        `;
+
         commentsList.appendChild(li);
+
       });
     } else {
       const li = document.createElement("li");

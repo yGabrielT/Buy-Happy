@@ -4,6 +4,7 @@
  */
 package Controle;
 
+import Modelo.DAOReview;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,13 +13,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
-import Modelo.DAOUsuario;
+
 /**
  *
  * @author gtrin
  */
-@WebServlet(name = "ValidarUsuario", urlPatterns = {"/ValidarUsuario"})
-public class ValidarUsuario extends HttpServlet {
+@WebServlet(name = "ControleReview", urlPatterns = {"/ControleReview"})
+public class ControleReview extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -31,32 +32,27 @@ public class ValidarUsuario extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html;charset=UTF-8");
-         String mensagemErro = "";
-        response.setContentType("text/html;charset=UTF-8");
-        String email, senha;
-        email = request.getParameter("email");
-        senha = request.getParameter("senha");
-        DAOUsuario dao = new DAOUsuario();
-        String dadosUsuario[];
-        try {
-            dadosUsuario = dao.buscarUsuario(email, senha);
-            if (dadosUsuario != null)
-            {
-                request.setAttribute("idUsuario", dadosUsuario[0]);
-                request.setAttribute("nome", dadosUsuario[2]);
-                request.getRequestDispatcher("menu.jsp").forward(request, response);
-            }else{
-                mensagemErro = ("Usuário e/ou senha inválidos");
-            }
-        } catch (SQLException | ClassNotFoundException ex) {
-            mensagemErro = ("Entre em contato com o suporte e informe o erro: " + ex.getMessage());
-        }
-        request.setAttribute("mensagem", mensagemErro);
-        request.getRequestDispatcher("mensagens.jsp").forward(request, response);
+        String m;
+        int u,p,n;
+        String mensagem;
+        m = request.getParameter("comentario");
+        n = Integer.parseInt(request.getParameter("nota"));
+        u = Integer.parseInt(request.getParameter("idUsuario"));
+        p = Integer.parseInt(request.getParameter("idProduto"));
         
-    }
+        
+        DAOReview dao = new DAOReview();
+        try {
+            dao.salvarReview(m, u, p, n);
+        } catch (SQLException | ClassNotFoundException ex) {
+            mensagem = ("Entre em contato com o suporte e informe o erro: " + ex.getMessage());
+            request.setAttribute("mensagem", mensagem);
+            request.getRequestDispatcher("mensagens.jsp").forward(request, response);
+        }
+
+        }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

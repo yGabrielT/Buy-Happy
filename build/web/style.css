@@ -299,7 +299,8 @@ footer {
 
 .product-main-image {
     width: 100%;
-    height: 450px;
+    max-height: 350px;
+    height: auto;
     object-fit: contain;
     background: #f9f9f9;
     margin-bottom: 15px;
@@ -356,6 +357,132 @@ footer {
     text-decoration: underline;
 }
 
+.review-create {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.review-create h3 {
+    margin: 0;
+}
+
+.review-create textarea {
+    width: 100%;
+    min-height: 120px;
+    resize: vertical;
+
+    border: 1px solid #ccc;
+    border-radius: 8px;
+
+    padding: 12px;
+    font-size: 16px;
+
+    box-sizing: border-box;
+}
+
+.review-create button {
+    align-self: flex-start;
+
+    background: #ff5722;
+    color: white;
+
+    border: none;
+    border-radius: 8px;
+
+    padding: 12px 20px;
+
+    cursor: pointer;
+
+    font-size: 15px;
+
+    transition: 0.2s;
+}
+
+.review-create button:hover {
+    background: #e64a19;
+}
+
+.star-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 5px;
+    margin-bottom: 15px;
+}
+
+.star-rating input {
+    display: none;
+}
+
+.star-rating label {
+    cursor: pointer;
+    width: 35px;
+    height: 35px;
+    position: relative;
+}
+
+.star-rating label::before {
+    content: "☆";
+    font-size: 35px;
+    color: #ccc;
+    position: absolute;
+    transition: 0.2s;
+}
+
+.star-rating label:hover::before,
+.star-rating label:hover ~ label::before {
+    content: "★";
+    color: #ffc107;
+}
+
+.star-rating input:checked ~ label::before {
+    content: "★";
+    color: #ffc107;
+}
+.review-votes {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    margin-top: 8px;
+}
+
+.vote-btn {
+    border: none;
+    background: #eee;
+
+    width: 32px;
+    height: 32px;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    font-size: 16px;
+    font-weight: bold;
+
+    transition: 0.2s;
+}
+
+.vote-btn:hover {
+    background: #ff5722;
+    color: white;
+}
+
+.vote-score {
+    font-weight: bold;
+    font-size: 15px;
+    min-width: 20px;
+    text-align: center;
+}
+
 @media (max-width: 768px) {
     header h1 {
         font-size: 2em;
@@ -402,7 +529,13 @@ footer {
     }
 
     .product-detail {
-        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        background: white;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
 }
 
