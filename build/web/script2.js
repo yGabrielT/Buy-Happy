@@ -492,12 +492,50 @@ function createCartElements() {
   document.getElementById("clear-cart").addEventListener("click", () => {
     if (confirm("Deseja limpar o carrinho?")) clearCart();
   });
-  document.getElementById("checkout").addEventListener("click", () => {
-    if (cart.length === 0) { alert("O carrinho está vazio."); return; }
-    alert("Compra simulada concluída. Obrigado!");
-    clearCart();
-    closeCart();
-  });
+  document.getElementById("checkout").addEventListener("click", async () => {
+
+    if (cart.length === 0) {
+        alert("O carrinho está vazio.");
+        return;
+    }
+
+    const dados = new URLSearchParams();
+
+    dados.append(
+        "cart",
+        JSON.stringify(cart)
+    );
+    dados.append(
+            "idUsuario",
+            document.getElementById("idUsuario").value
+        );
+
+    try {
+
+        const resposta = await fetch("ControleCompra", {
+            method: "POST",
+            headers: {
+                "Content-Type":
+                "application/x-www-form-urlencoded"
+            },
+            body: dados
+        });
+
+        const resultado = await resposta.text();
+
+        alert("Compra realizada!");
+
+        clearCart();
+        closeCart();
+
+    } catch (erro) {
+
+        console.log(erro);
+        alert("Erro ao finalizar compra.");
+
+    }
+
+});
 }
 
 function renderCartBadge() {

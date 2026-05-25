@@ -11,17 +11,10 @@
 
   <header>
     <h1>Buy Happy</h1>
-    <div class="search-container">
-      <input type="text" class="search-bar" placeholder="Pesquise produtos...">
-      <button class="search-button">Buscar</button>
-    </div>
   </header>
 
   <nav>
-    <a href="#" class="nav-link" data-page="home">Início</a>
     <a href="#" class="back-to-products">Produtos</a>
-    <a href="#" class="nav-link" data-page="home">Ofertas</a>
-    <a href="#" class="nav-link" data-page="home">Contato</a>
   </nav>
 
   <section class="capa" id="home-page">
@@ -73,11 +66,6 @@
             <p id="detail-product-description">
               Descrição detalhada do produto aparecerá aqui.
             </p>
-
-            <button class="btn"
-              style="padding: 15px; font-size: 18px; margin-top: 20px;">
-              Comprar Agora
-            </button>
 
             <button class="btn add_prod"
               style="padding: 15px; font-size: 18px; margin-top: 10px;">

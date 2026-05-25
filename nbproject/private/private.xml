@@ -16,6 +16,11 @@
             <file>file:/D:/Faculdade%20Coisas/BuyHappy/BuyHappy/web/style.css</file>
             <file>file:/D:/Faculdade%20Coisas/BuyHappy/BuyHappy/web/mensagens.jsp</file>
             <file>file:/D:/Faculdade%20Coisas/BuyHappy/BuyHappy/src/java/Controle/ControleProduto.java</file>
+            <file>file:/D:/Faculdade%20Coisas/BuyHappy/BuyHappy/src/java/Controle/ControleReview.java</file>
+            <file>file:/D:/Faculdade%20Coisas/BuyHappy/BuyHappy/src/java/Modelo/DAOReview.java</file>
+            <file>file:/D:/Faculdade%20Coisas/BuyHappy/BuyHappy/src/java/Controle/ControleVotoReview.java</file>
+            <file>file:/D:/Faculdade%20Coisas/BuyHappy/BuyHappy/src/java/Controle/ControleCompra.java</file>
+            <file>file:/D:/Faculdade%20Coisas/BuyHappy/BuyHappy/src/java/Modelo/DAOCompra.java</file>
         </group>
     </open-files>
 </project-private>

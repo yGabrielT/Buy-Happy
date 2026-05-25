@@ -36,159 +36,142 @@ public class DAOProduto {
         conectar();
         Class.forName("com.mysql.cj.jdbc.Driver");
 
-            conecta = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/buyhappy",
-                    "root",
-                    "1234"
-            );
+        conecta = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/buyhappy",
+                "root",
+                "1234"
+        );
 
-            st = conecta.prepareStatement("SELECT * FROM produto");
+        st = conecta.prepareStatement("SELECT * FROM produto");
 
-            resultado = st.executeQuery();
+        resultado = st.executeQuery();
 
-            StringBuilder json = new StringBuilder();
+        StringBuilder json = new StringBuilder();
 
-            json.append("[");
+        json.append("[");
 
-            boolean primeiro = true;
+        boolean primeiro = true;
 
-            while (resultado.next()) {
+        while (resultado.next()) {
 
-                if (!primeiro) {
+            if (!primeiro) {
+                json.append(",");
+            }
+
+            primeiro = false;
+
+            json.append("{");
+            json.append("\"id\":")
+                .append(resultado.getInt("id_produto"))
+                .append(",");
+
+            json.append("\"nome\":\"")
+                .append(escapeJson(resultado.getString("nome")))
+                .append("\",");
+
+            json.append("\"descricao\":\"")
+                .append(escapeJson(resultado.getString("descricao")))
+                .append("\",");
+
+            json.append("\"preco\":")
+                .append(resultado.getDouble("preco"))
+                .append(",");
+
+            json.append("\"categoria\":\"")
+                .append(escapeJson(resultado.getString("categoria")))
+                .append("\",");
+
+            PreparedStatement stMediaReview =
+                conecta.prepareStatement(
+                    "select avg(nota) from avaliacao WHERE id_produto = ?"
+                );
+            stMediaReview.setInt(1, resultado.getInt("id_produto"));
+            ResultSet totalMediaReview = stMediaReview.executeQuery();
+            totalMediaReview.next();
+
+
+            json.append("\"avaliacao\":\"")
+                //.append(escapeJson("2"))
+                .append(escapeJson(totalMediaReview.getString("avg(nota)")))
+                .append("\",");
+
+
+             PreparedStatement stTotalReview =
+                conecta.prepareStatement(
+                    "SELECT COUNT(*) FROM Avaliacao WHERE id_produto = ?"
+                );
+            stTotalReview.setInt(1, resultado.getInt("id_produto"));
+            ResultSet totalReview = stTotalReview.executeQuery();
+            totalReview.next();
+
+            json.append("\"totalAvaliacoes\":\"")
+                .append(escapeJson(totalReview.getString("COUNT(*)")))
+                .append("\",");
+            json.append("\"stock\":\"")
+                .append(escapeJson(resultado.getString("estoque")))
+                .append("\",");
+            json.append("\"comments\":[");
+
+            PreparedStatement stReview =
+                conecta.prepareStatement(
+                    "select avaliacao.id_avaliacao, nome,comentario,nota,score from avaliacao " +
+                    "inner join usuario on usuario.id_usuario = avaliacao.id_usuario " +
+                    "left join confiabilidade on confiabilidade.id_avaliacao = avaliacao.id_avaliacao " +
+                    "where avaliacao.id_produto = ?"
+                );
+
+            stReview.setInt(1, resultado.getInt("id_produto"));
+
+            ResultSet review = stReview.executeQuery();
+
+            boolean primeiroComentario = true;
+
+            while(review.next()) {
+
+                if(!primeiroComentario) {
                     json.append(",");
                 }
 
-                primeiro = false;
+                primeiroComentario = false;
 
                 json.append("{");
-                json.append("\"id\":")
-                    .append(resultado.getInt("id_produto"))
-                    .append(",");
 
                 json.append("\"nome\":\"")
-                    .append(escapeJson(resultado.getString("nome")))
+                    .append(escapeJson(review.getString("nome")))
                     .append("\",");
 
-                json.append("\"descricao\":\"")
-                    .append(escapeJson(resultado.getString("descricao")))
-                    .append("\",");
-
-                json.append("\"preco\":")
-                    .append(resultado.getDouble("preco"))
+                json.append("\"estrelas\":")
+                    .append(review.getInt("nota"))
                     .append(",");
 
-                json.append("\"categoria\":\"")
-                    .append(escapeJson(resultado.getString("categoria")))
-                    .append("\",");
-                json.append("\"avaliacao\":\"")
-                    .append(escapeJson("5.0"))
-                    .append("\",");
-                
-                
-                 PreparedStatement stTotalReview =
-                    conecta.prepareStatement(
-                        "SELECT COUNT(*) FROM Avaliacao WHERE id_produto = 1"
-                    );
-                ResultSet totalReview = stTotalReview.executeQuery();
-                totalReview.next();
-                
-                json.append("\"totalAvaliacoes\":\"")
-                    .append(escapeJson(totalReview.getString("COUNT(*)")))
-                    .append("\",");
-                json.append("\"stock\":\"")
-                    .append(escapeJson(resultado.getString("estoque")))
-                    .append("\",");
-/*  
-                json.append("\"comments\":[");
-                
-                PreparedStatement stReview =
-                    conecta.prepareStatement(
-                        "SELECT Comentario FROM Avaliacao WHERE id_produto = ?"
-                    );
+                json.append("\"id\":")
+                    .append(escapeJson(review.getString("id_avaliacao")))
+                    .append(",");
 
-                stReview.setInt(1, resultado.getInt("id_produto"));
+                json.append("\"score\":")
+                    .append(review.getDouble("score"))
+                    .append(",");
 
-                ResultSet review = stReview.executeQuery();
-
-                boolean primeiraImagem = true;
-
-                while(review.next()) {
-
-                    if(!primeiraImagem) {
-                        json.append(",");
-                    }
-
-                    primeiraImagem = false;
-
-                    json.append("\"")
-                        .append(escapeJson(review.getString("Comentario")))
-                        .append("\"");
-                }
-
-                json.append("],");
-*/
-                json.append("\"comments\":[");
-
-                PreparedStatement stReview =
-                    conecta.prepareStatement(
-                        "select avaliacao.id_avaliacao, nome,comentario,nota,score from avaliacao " +
-                        "inner join usuario on usuario.id_usuario = avaliacao.id_usuario " +
-                        "left join confiabilidade on confiabilidade.id_avaliacao = avaliacao.id_avaliacao " +
-                        "where avaliacao.id_produto = ?"
-                    );
-
-                stReview.setInt(1, resultado.getInt("id_produto"));
-
-                ResultSet review = stReview.executeQuery();
-
-                boolean primeiroComentario = true;
-
-                while(review.next()) {
-
-                    if(!primeiroComentario) {
-                        json.append(",");
-                    }
-
-                    primeiroComentario = false;
-
-                    json.append("{");
-
-                    json.append("\"nome\":\"")
-                        .append(escapeJson(review.getString("nome")))
-                        .append("\",");
-
-                    json.append("\"estrelas\":")
-                        .append(review.getInt("nota"))
-                        .append(",");
-                    
-                    json.append("\"id\":")
-                        .append(escapeJson(review.getString("id_avaliacao")))
-                        .append(",");
-
-                    json.append("\"score\":")
-                        .append(review.getDouble("score"))
-                        .append(",");
-
-                    json.append("\"descricao\":\"")
-                        .append(escapeJson(review.getString("comentario")))
-                        .append("\"");
-
-                    json.append("}");
-                }
-
-                json.append("],");
-                
-                json.append("\"imagens\":[");
-                json.append("\"")
-                    .append(escapeJson(resultado.getString("imagem_url")))
+                json.append("\"descricao\":\"")
+                    .append(escapeJson(review.getString("comentario")))
                     .append("\"");
-                json.append("]");
+
                 json.append("}");
             }
 
+            json.append("],");
+
+            json.append("\"imagens\":[");
+            json.append("\"")
+                .append(escapeJson(resultado.getString("imagem_url")))
+                .append("\"");
             json.append("]");
-            dados[0] = json.toString();
-            return dados;
+            json.append("}");
+        }
+
+        json.append("]");
+        dados[0] = json.toString();
+        return dados;
 
     }
 }
