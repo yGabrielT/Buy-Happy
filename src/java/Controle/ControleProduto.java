@@ -32,6 +32,9 @@ public class ControleProduto extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
         request.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=UTF-8");
         String mensagem;
