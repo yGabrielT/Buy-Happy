@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Modelo;
 
 import java.sql.Connection;
@@ -10,10 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- *
- * @author gtrin
- */
 public class DAOReview {
     private Connection conecta;
     private PreparedStatement st;
@@ -22,7 +14,6 @@ public class DAOReview {
     public void conectar() throws ClassNotFoundException, SQLException{
         Class.forName("com.mysql.cj.jdbc.Driver");
         conecta = DriverManager.getConnection("jdbc:mysql://localhost:3306/buyhappy","root","1234");
-        
     }
     
     public void salvarReview (String m, int u, int p, int n) throws SQLException, ClassNotFoundException
@@ -47,18 +38,84 @@ public class DAOReview {
         st.executeUpdate();
     }
     
-    public void votarReview (int idReview, String tipo) throws SQLException, ClassNotFoundException
+    /**
+     * Verifica se o usuário já votou nessa avaliação.
+     * Retorna o tipo do voto ("up" ou "down") se já votou, ou null se não votou.
+     */
+    public String verificarVotoUsuario(int idReview, int idUsuario) throws SQLException, ClassNotFoundException
     {
         conectar();
-        if (tipo.equals("up"))
-        {
-            st = conecta.prepareStatement("update confiabilidade set score = score + 1 where id_avaliacao = ?");
-        }else
-        {
-            st = conecta.prepareStatement("update confiabilidade set score = score - 1 where id_avaliacao = ?");
-        }
-        
+        st = conecta.prepareStatement("SELECT tipo FROM voto_usuario WHERE id_avaliacao = ? AND id_usuario = ?");
         st.setInt(1, idReview);
-        st.executeUpdate();
+        st.setInt(2, idUsuario);
+        resultado = st.executeQuery();
+        if (resultado.next()) {
+            return resultado.getString("tipo");
+        }
+        return null;
+    }
+    
+    /**
+     * Registra ou atualiza o voto de um usuário em uma avaliação.
+     * - Se não votou antes: adiciona o voto e incrementa/decrementa o score.
+     * - Se votou igual: remove o voto (toggle) e reverte o score.
+     * - Se votou diferente: troca o voto e ajusta o score em 2.
+     * Retorna uma string com o resultado: "added", "removed" ou "changed".
+     */
+    public String votarReview(int idReview, int idUsuario, String tipo) throws SQLException, ClassNotFoundException
+    {
+        conectar();
+        String votoAtual = verificarVotoUsuario(idReview, idUsuario);
+        
+        if (votoAtual == null) {
+            // Nunca votou: insere o voto e atualiza o score
+            st = conecta.prepareStatement("INSERT INTO voto_usuario (id_avaliacao, id_usuario, tipo) VALUES (?, ?, ?)");
+            st.setInt(1, idReview);
+            st.setInt(2, idUsuario);
+            st.setString(3, tipo);
+            st.executeUpdate();
+            
+            String sql = tipo.equals("up")
+                ? "UPDATE confiabilidade SET score = score + 1 WHERE id_avaliacao = ?"
+                : "UPDATE confiabilidade SET score = score - 1 WHERE id_avaliacao = ?";
+            st = conecta.prepareStatement(sql);
+            st.setInt(1, idReview);
+            st.executeUpdate();
+            
+            return "added";
+            
+        } else if (votoAtual.equals(tipo)) {
+            // Clicou no mesmo botão: remove o voto (toggle)
+            st = conecta.prepareStatement("DELETE FROM voto_usuario WHERE id_avaliacao = ? AND id_usuario = ?");
+            st.setInt(1, idReview);
+            st.setInt(2, idUsuario);
+            st.executeUpdate();
+            
+            String sql = tipo.equals("up")
+                ? "UPDATE confiabilidade SET score = score - 1 WHERE id_avaliacao = ?"
+                : "UPDATE confiabilidade SET score = score + 1 WHERE id_avaliacao = ?";
+            st = conecta.prepareStatement(sql);
+            st.setInt(1, idReview);
+            st.executeUpdate();
+            
+            return "removed";
+            
+        } else {
+            // Votou diferente: troca o voto e ajusta score em 2
+            st = conecta.prepareStatement("UPDATE voto_usuario SET tipo = ? WHERE id_avaliacao = ? AND id_usuario = ?");
+            st.setString(1, tipo);
+            st.setInt(2, idReview);
+            st.setInt(3, idUsuario);
+            st.executeUpdate();
+            
+            String sql = tipo.equals("up")
+                ? "UPDATE confiabilidade SET score = score + 2 WHERE id_avaliacao = ?"
+                : "UPDATE confiabilidade SET score = score - 2 WHERE id_avaliacao = ?";
+            st = conecta.prepareStatement(sql);
+            st.setInt(1, idReview);
+            st.executeUpdate();
+            
+            return "changed";
+        }
     }
 }

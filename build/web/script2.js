@@ -86,35 +86,67 @@ document.addEventListener("click", async function(e) {
 
     if (e.target.classList.contains("vote-btn")) {
 
-        const reviewId = e.target.dataset.review;
-        const type = e.target.dataset.type;
+        const btn = e.target;
 
-        const dados = new URLSearchParams();
+        // Evita cliques duplos enquanto a requisição está em andamento
+        if (btn.disabled) return;
+        btn.disabled = true;
 
-        dados.append("idReview", reviewId);
-        dados.append("tipo", type);
+        const reviewId = btn.dataset.review;
+        const type     = btn.dataset.type;
+        const idUsuario = document.getElementById("idUsuario")?.value;
 
-        await fetch("ControleVotoReview", {
-            method: "POST",
-            headers: {
-                "Content-Type":
-                "application/x-www-form-urlencoded"
-            },
-            body: dados
-        });
-
-        const scoreElement =
-            e.target.parentElement.querySelector(".vote-score");
-
-        let scoreAtual = parseInt(scoreElement.textContent);
-
-        if (type === "up") {
-            scoreAtual++;
-        } else {
-            scoreAtual--;
+        if (!idUsuario) {
+            alert("Você precisa estar logado para votar.");
+            btn.disabled = false;
+            return;
         }
 
-        scoreElement.textContent = scoreAtual;
+        const dados = new URLSearchParams();
+        dados.append("idReview",  reviewId);
+        dados.append("tipo",      type);
+        dados.append("idUsuario", idUsuario);
+
+        try {
+            const res  = await fetch("ControleVotoReview", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: dados
+            });
+
+            const json = await res.json();
+
+            const scoreElement = btn.parentElement.querySelector(".vote-score");
+            let scoreAtual = parseInt(scoreElement.textContent);
+
+            const upBtn   = btn.parentElement.querySelector(".vote-btn[data-type='up']");
+            const downBtn = btn.parentElement.querySelector(".vote-btn[data-type='down']");
+
+            if (json.resultado === "added") {
+                // Voto novo: marca este botão como ativo
+                scoreAtual += (type === "up") ? 1 : -1;
+                btn.classList.add("voted");
+
+            } else if (json.resultado === "removed") {
+                // Toggle: desfez o voto
+                scoreAtual += (type === "up") ? -1 : 1;
+                btn.classList.remove("voted");
+
+            } else if (json.resultado === "changed") {
+                // Trocou o voto: ajusta em 2 e inverte os estados visuais
+                scoreAtual += (type === "up") ? 2 : -2;
+                upBtn.classList.remove("voted");
+                downBtn.classList.remove("voted");
+                btn.classList.add("voted");
+            }
+
+            scoreElement.textContent = scoreAtual;
+
+        } catch (err) {
+            console.error("Erro ao registrar voto:", err);
+        }
+
+        btn.disabled = false;
     }
 
 });
