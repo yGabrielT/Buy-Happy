@@ -50,12 +50,13 @@ public class DAOCompra {
                     itens[i + 1].split(":")[1]
                 );
 
-                st = conecta.prepareStatement("select preco from produto where id_produto = ?");
+                st = conecta.prepareStatement("select preco, estoque from produto where id_produto = ?");
                 st.setInt(1, id);
                 resultado = st.executeQuery();
                 if (resultado.next())
                 {
                     float preco = resultado.getFloat("preco");
+                    float estoque = resultado.getFloat("estoque");
                     precoTotal += preco * quantidade;
                     st = conecta.prepareStatement("insert into itens_pedido(id_pedido,id_produto,quantidade,preco_unitario) values (?,?,?,?)");
                     st.setInt(1, idPedido);
@@ -64,6 +65,10 @@ public class DAOCompra {
                     st.setFloat(4, preco);
                     st.executeUpdate();
                     
+                    st = conecta.prepareStatement("update produto set estoque = estoque - ? where id_produto = ?");
+                    st.setInt(1, quantidade);
+                    st.setInt(2, id);
+                    st.executeUpdate();
                     
                 }
                 
