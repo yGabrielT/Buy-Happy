@@ -83,7 +83,7 @@ public class DAOProduto {
 
             PreparedStatement stMediaReview =
                 conecta.prepareStatement(
-                    "select avg(nota) from avaliacao WHERE id_produto = ?"
+                    "select avg(nota) from avaliacao left join confiabilidade on avaliacao.id_avaliacao = confiabilidade.id_avaliacao where id_produto = ? and (score >= 0)"
                 );
             stMediaReview.setInt(1, resultado.getInt("id_produto"));
             ResultSet totalMediaReview = stMediaReview.executeQuery();
